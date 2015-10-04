@@ -35,12 +35,12 @@ public class LifeExpectancy extends PApplet {
 		MapUtils.createDefaultEventDispatcher(this, map);
 
 		// Load lifeExpectancy data
-		lifeExpMap = loadLifeExpectancyFromCSV("LifeExpectancyWorldBankModule3.csv");
+		lifeExpMap = loadLifeExpectancyFromCSV("/Users/mateusz/IdeaProjects/UCSDUnfoldingMaps/data/LifeExpectancyWorldBankModule3.csv");
 		println("Loaded " + lifeExpMap.size() + " data entries");
 		
 
 		// Load country polygons and adds them as markers
-		countries = GeoJSONReader.loadData(this, "countries.geo.json");
+		countries = GeoJSONReader.loadData(this, "/Users/mateusz/IdeaProjects/UCSDUnfoldingMaps/data/countries.geo.json");
 		countryMarkers = MapUtils.createSimpleMarkers(countries);
 		map.addMarkers(countryMarkers);
 		

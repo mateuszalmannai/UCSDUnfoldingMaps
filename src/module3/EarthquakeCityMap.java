@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Processing library
+import de.fhpotsdam.unfolding.geo.Location;
 import processing.core.PApplet;
 
 //Unfolding libraries
@@ -75,28 +76,55 @@ public class EarthquakeCityMap extends PApplet {
 	    
 	    // These print statements show you (1) all of the relevant properties 
 	    // in the features, and (2) how to get one property and use it
-	    if (earthquakes.size() > 0) {
-	    	PointFeature f = earthquakes.get(0);
-	    	System.out.println(f.getProperties());
-	    	Object magObj = f.getProperty("magnitude");
-	    	float mag = Float.parseFloat(magObj.toString());
-	    	// PointFeatures also have a getLocation method
-	    }
+//	    if (earthquakes.size() > 0) {
+//	    	PointFeature f = earthquakes.get(0);
+//	    	System.out.println(f.getProperties());
+//	    	Object magObj = f.getProperty("magnitude");
+//	    	float mag = Float.parseFloat(magObj.toString());
+//	    	// PointFeatures also have a getLocation method
+//	    }
 	    
 	    // Here is an example of how to use Processing's color method to generate 
 	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
+//	    int yellow = color(255, 255, 0);
 	    
 	    //TODO: Add code here as appropriate
+		// Create a SimplePointFeature object for for each PointFeature in the list
+		for (PointFeature earthquake : earthquakes) {
+			final SimplePointMarker marker = createMarker(earthquake);
+			markers.add(marker);
+		}
+
+		map.addMarkers(markers);
 	}
 		
 	// A suggested helper method that takes in an earthquake feature and 
 	// returns a SimplePointMarker for that earthquake
 	// TODO: Implement this method and call it from setUp, if it helps
-	private SimplePointMarker createMarker(PointFeature feature)
-	{
+	private SimplePointMarker createMarker(PointFeature feature) {
+		// change the appearance of the markers based on the magnitude
+		final Object magnitudeObject = feature.getProperty("magnitude");
+		final float magnitude = Float.parseFloat(magnitudeObject.toString());
 		// finish implementing and use this method, if it helps.
-		return new SimplePointMarker(feature.getLocation());
+		final SimplePointMarker marker = new SimplePointMarker(feature.getLocation());
+
+		if (magnitude < 4.0) {
+			// make blue and small
+			marker.setColor(color(0, 0, 255));
+			marker.setRadius(5);
+
+		} else if (magnitude < 5.0) {
+			// make yellow and medium
+			marker.setColor(color(255, 255, 0));
+			marker.setRadius(10);
+
+		} else if (magnitude >= 5.0) {
+			// make red and largest
+			marker.setColor(color(255, 0, 0));
+			marker.setRadius(15);
+		}
+
+		return marker;
 	}
 	
 	public void draw() {
@@ -108,9 +136,26 @@ public class EarthquakeCityMap extends PApplet {
 
 	// helper method to draw key in GUI
 	// TODO: Implement this method to draw the key
-	private void addKey() 
-	{	
+	private void addKey() {
 		// Remember you can use Processing's graphics methods here
-	
+		fill(255, 250, 240);
+		rect(25, 50, 150, 250);
+
+		fill(0);
+		textAlign(LEFT, CENTER);
+		textSize(12);
+		text("Earthquake Key", 50, 75);
+
+		fill(color(255, 0, 0));
+		ellipse(50, 125, 15, 15);
+		fill(color(255, 255, 0));
+		ellipse(50, 175, 10, 10);
+		fill(color(0, 0, 255));
+		ellipse(50, 225, 5, 5);
+
+		fill(0, 0, 0);
+		text("5.0+ Magnitude", 75, 125);
+		text("4.0+ Magnitude", 75, 175);
+		text("Below 4.0", 75, 225);
 	}
 }
